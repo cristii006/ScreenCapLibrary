@@ -22,7 +22,7 @@ ${SECOND_VIDEO_FILE}  ${OUTPUTDIR}${/}recording_2.webm
 ${THIRD_VIDEO_FILE}  ${OUTPUTDIR}${/}recording_3.webm
 ${VIDEO_PERCENT}  25
 ${SCREENSHOT_PERCENT}  50
-${SCREENSHOT DIR} =     ${CURDIR}${/}robot_atest_gifs
+${SCREENSHOT_DIR}  ${CURDIR}${/}robot_atest_gifs
 
 *** Test Cases ***
 #Screenshot Is Taken
@@ -104,19 +104,19 @@ ${SCREENSHOT DIR} =     ${CURDIR}${/}robot_atest_gifs
 #    ${partial_screenshot}=  ScreenCapLibraryGtk.Take Partial Screenshot  left=50  height=300  width=700
 #    Screenshot Should Exist  ${partial_screenshot}
 
-Take Gif
-    ScreenCapLibrary.Set Screenshot Directory  ${SCREENSHOT DIR}
-    ScreenCapLibrary.Start Gif Recording
-    Sleep  5
-    ${path}=  ScreenCapLibrary.Stop Gif Recording
+#Take Gif
+#    ScreenCapLibrary.Set Screenshot Directory  ${SCREENSHOT DIR}
+#    ScreenCapLibrary.Start Gif Recording
+#    Sleep  5
+#    ${path}=  ScreenCapLibrary.Stop Gif Recording
 #    Screenshot Should Exist  ${GIF_SCREENSHOT}
 #    Should Be Equal  ${path}  ${GIF_SCREENSHOT}
 
-#Take Gtk Gif
-#    [Tags]    gtk
-#    ScreenCapLibraryGtk.Start Gif Recording
-#    Sleep  2
-#    ${path}=  ScreenCapLibraryGtk.Stop Gif Recording
+Take Gtk Gif
+    [Tags]    gtk
+    ScreenCapLibraryGtk.Start Gif Recording
+    Sleep  5
+    ${path}=  ScreenCapLibraryGtk.Stop Gif Recording
 #    Screenshot Should Exist  ${GIF_SCREENSHOT}
 #    Should Be Equal  ${path}  ${GIF_SCREENSHOT}
 
