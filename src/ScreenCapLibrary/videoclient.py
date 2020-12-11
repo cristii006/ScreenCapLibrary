@@ -1,6 +1,7 @@
 import os
 import threading
 import time
+import pyautogui
 
 from .client import Client, run_in_background
 from .pygtk import _record_gtk, benchmark_recording_performance_gtk, _take_gtk_screen_size
@@ -14,6 +15,9 @@ try:
     import numpy as np
 except ImportError:
     raise ImportError('Importing cv2 failed. Make sure you have opencv-python installed.')
+
+background_x_list = [0, 8, 6, 14, 12, 4, 2, 0]
+background_y_list = [0, 2, 4, 12, 14, 6, 8, 0]
 
 
 class VideoClient(Client):
@@ -86,10 +90,24 @@ class VideoClient(Client):
     def record(vid, width, height, size_percentage, monitor):
         with mss() as sct:
             sct_img = sct.grab(sct.monitors[monitor])
+            mouse_x, mouse_y = pyautogui.position()
         numpy_array = np.array(sct_img)
         resized_array = cv2.resize(numpy_array, dsize=(int(width * size_percentage), int(height * size_percentage)),
                                    interpolation=cv2.INTER_AREA) if size_percentage != 1 else numpy_array
         frame = cv2.cvtColor(resized_array, cv2.COLOR_RGBA2RGB)
+        factor = 2
+        background_x = [factor*x+mouse_x for x in background_x_list]
+        background_y = [factor*y+mouse_y for y in background_y_list]
+        background_points = list(zip(background_x, background_y))
+        background_points = np.array(background_points, 'int32')
+        x_list = [1, 8, 4, 14, 12, 4, 2, 1]
+        y_list = [1, 2, 4, 12, 14, 4, 8, 1]
+        x_this = [factor*x+mouse_x for x in x_list]
+        y_this = [factor*y+mouse_y for y in y_list]
+        points = list(zip(x_this, y_this))
+        points = np.array(points, 'int32')
+        cv2.fillPoly(frame, [background_points], color=[0, 0, 0])
+        cv2.fillPoly(frame, [points], color=[255, 255, 255])
         vid.write(frame)
 
     def _embed_video(self, path, width):
